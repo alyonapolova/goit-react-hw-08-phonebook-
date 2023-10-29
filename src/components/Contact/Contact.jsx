@@ -25,7 +25,7 @@ import EditContactForm from 'components/ContactForm/ContactUpdate';
 
 const defaultTheme = createTheme();
 
-const Contacts = () => {
+const Contact = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
   const isLoading = useSelector(selectIsLoading);
@@ -126,4 +126,4 @@ const Contacts = () => {
   );
 };
 
-export default Contacts;
+export default Contact;

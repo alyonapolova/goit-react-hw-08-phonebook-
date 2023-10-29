@@ -1,3 +1,4 @@
+import Contact from 'components/Contact/Contact';
 import ContactForm from 'components/ContactForm/ContactForm';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -16,7 +17,7 @@ export default function Contacts() {
   return (
     <div>
       <ContactForm contact={contact} />
-      <Contacts />
+      <Contact />
     </div>
   );
 }
