@@ -1,9 +1,9 @@
-import css from './Home.module.css';
+import HomeInfo from 'components/HomeInfo/Home';
 
 export default function Home() {
   return (
-    <div className={css.container}>
-      <h1 className={css.title}>Phonebook Application</h1>
-    </div>
+    <>
+      <HomeInfo />
+    </>
   );
 }
