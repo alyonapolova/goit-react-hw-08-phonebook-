@@ -1,65 +1,95 @@
-import { nanoid } from 'nanoid';
-import { useSelector, useDispatch } from 'react-redux';
-import { getContactsItems } from '../../reduxs/contacts/contactsSlice';
-import { addContact } from '../../reduxs/contacts/operations';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useSelector } from 'react-redux';
+import { selectContacts } from 'redux/contacts/selectors';
+import Box from '@mui/material/Box';
+import AddIcCallIcon from '@mui/icons-material/AddIcCall';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { Notify } from 'notiflix';
+const defaultTheme = createTheme();
 
-import css from '../../components/ContactForm/ContactForm.module.css';
-
-const ContactForm = () => {
-  const dispatch = useDispatch();
-  const contacts = useSelector(getContactsItems);
+const ContactForm = ({ contact }) => {
+  const contacts = useSelector(selectContacts);
 
   const handleSubmit = e => {
     e.preventDefault();
-
-    const newObj = {
-      id: nanoid(),
-      name: e.target.elements.name.value,
-      number: e.target.elements.number.value,
+    const { name, number } = e.target.elements;
+    const newContact = {
+      name: name.value,
+      number: number.value,
     };
-    if (contacts.find(({ name }) => name === newObj.name)) {
-      return alert(`${newObj.name} is already in contacts`);
+
+    const findDuplicate = contacts.some(contact => contact.name === name.value);
+    if (findDuplicate) {
+      Notify.warning(`${name.value} is already in contacts!`);
+    } else {
+      contact(newContact);
     }
 
-    if (contacts.find(({ number }) => number === newObj.number)) {
-      return alert(`${newObj.number} is already in contacts`);
-    }
-
-    dispatch(addContact(newObj));
-
-    e.target.reset();
+    name.value = '';
+    number.value = '';
   };
-
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label className={css.lable}>
-          Name
-          <input
-            className={css.contact_inp}
-            type="text"
-            name="name"
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            required
-          />
-        </label>
-        <label  className={css.lable}>
-          Number
-          <input
-            className={css.contact_inp}
-            type="tel"
-            name="number"
-            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-            required
-          />
-        </label>
-        <button className={css.sabmit_contact} type="sabmit">
-          add contact
-        </button>
-      </form>
-    </div>
+    <ThemeProvider theme={defaultTheme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <AddIcCallIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Add contact
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="name"
+              label="Name"
+              type="name"
+              name="name"
+              autoComplete="name"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="number"
+              type="number"
+              label="Number"
+              id="number"
+              autoComplete="current-password"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Add contact
+            </Button>
+          </Box>
+        </Box>
+      </Container>
+    </ThemeProvider>
   );
 };
 export default ContactForm;

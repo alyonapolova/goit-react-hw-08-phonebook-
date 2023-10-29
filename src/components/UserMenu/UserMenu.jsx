@@ -1,20 +1,28 @@
-import { useDispatch } from 'react-redux';
-import { logOut } from 'reduxs/auth/operations';
-import { useAuth } from 'hooks';
-import { FcBusinessman } from 'react-icons/fc';
-import css from './UserMenu.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { logOutUser } from 'redux/auth/operations';
+import { selectUser } from 'redux/auth/selectors';
+import Avatar from '@mui/material/Avatar';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import {
+  StyledLink,
+  StyledName,
+  StyledNav,
+  StyledUser,
+} from './UserMenu.styled';
 
 export const UserMenu = () => {
   const dispatch = useDispatch();
-  const { user } = useAuth();
+  const user = useSelector(selectUser);
 
   return (
-    <div className={css.wrapper}>
-      <FcBusinessman size={'1.5em'} />
-      <p className={css.username}>Welcome, {user.name}</p>
-      <button type="button" onClick={() => dispatch(logOut())}>
-        Logout
-      </button>
-    </div>
+    <StyledNav>
+      <StyledUser>
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <PermIdentityIcon />
+        </Avatar>
+        <StyledName>Hi, {user.name}!</StyledName>
+      </StyledUser>
+      <StyledLink onClick={() => dispatch(logOutUser())}>LogOut</StyledLink>
+    </StyledNav>
   );
 };
